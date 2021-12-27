@@ -2,13 +2,20 @@ import React from 'react';
 import styles from './ImageGallery.module.css';
 import PropTypes from 'prop-types';
 
-const ImageGalleryItem = ({ imageId, imageSmall, imageLarge, alt }) => {
+const ImageGalleryItem = ({
+  clicked,
+  imageId,
+  imageSmall,
+  imageLarge,
+  alt,
+}) => {
   return (
-    <li className={styles.ImageGalleryItem} key={imageId}>
+    <li className={styles.ImageGalleryItem} onClick={() => clicked(imageLarge)}>
       <img
-        className={styles.ImageGalleryItemImage}
+        id={imageId}
         src={imageSmall}
         alt={alt}
+        className={styles.ImageGalleryItemImage}
       />
     </li>
   );
