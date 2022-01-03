@@ -4,18 +4,17 @@ import shortid from 'shortid';
 import styles from './ImageGallery.module.css';
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem';
 
-const ImageGallery = ({ images, onImageClick }) => {
+const ImageGallery = ({ images, onClick }) => {
   return (
     <ul className={styles.ImageGallery}>
       {images.map(image => (
         <ImageGalleryItem
-          //   key={image.id}
           key={shortid.generate()}
           imageId={image.id}
           imageSmall={image.webformatURL}
           imageLadge={image.largeImageURL}
           alt={image.tags}
-          clicked={onImageClick}
+          clicked={onClick}
         />
       ))}
     </ul>

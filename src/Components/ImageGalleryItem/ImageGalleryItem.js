@@ -10,7 +10,7 @@ const ImageGalleryItem = ({
   alt,
 }) => {
   return (
-    <li className={styles.ImageGalleryItem} onClick={() => clicked(imageLarge)}>
+    <li className={styles.ImageGalleryItem} onClick={clicked}>
       <img
         id={imageId}
         src={imageSmall}

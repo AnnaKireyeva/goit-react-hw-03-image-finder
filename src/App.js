@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Loader from 'react-loader-spinner';
 import 'react-loader-spinner/dist/loader/css/react-spinner-loader.css';
@@ -25,31 +26,8 @@ export default class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.query !== this.state.query) {
-      // console.log('Change query');
-      // console.log('prevState.query:', prevState.query);
-      // console.log('this.state.query:', this.state.query);
       this.setState({ loading: true, hits: [], page: 1 });
       this.fetchImages();
-
-      // fetch(
-      //   `${this.baseUrl}?q=${this.state.query}&page=${this.state.page}&key=${this.apiKey}&image_type=photo&orientation=horizontal&per_page=12`,
-      // )
-      //   // .then(res => res.json())
-      //   // .then(console.log)
-      //   .then(response => {
-      //     if (response.ok) {
-      //       return response.json();
-      //     }
-      //     return Promise.reject(new Error('No images for this request'));
-      //   })
-      //   .then(({ hits }) =>
-      //     this.setState(prevState => ({
-      //       hits: [...prevState.hits, ...hits],
-      //       page: prevState.page + 1,
-      //     })),
-      //   )
-      //   .catch(error => this.setState({ error }))
-      //   .finally(() => this.setState({ loading: false }));
     }
   }
 
@@ -65,45 +43,36 @@ export default class App extends Component {
         }
         return Promise.reject(new Error('No images for this request'));
       })
-      .then(({ hits }) =>
+      .then(({ hits }) => {
         this.setState(prevState => ({
           hits: [...prevState.hits, ...hits],
           page: prevState.page + 1,
-        })),
-      )
+        }));
+        if (this.state.hits.length === 0) {
+          return toast.error('No images for your request');
+        }
+      })
       .catch(error => this.setState({ error }))
-      .finally(() => this.setState({ loading: false }));
+      .finally(() => {
+        this.setState({ loading: false });
+        this.toScroll();
+      });
   };
 
   getQueryFromForm = query => {
-    console.log(query);
     this.setState({ query });
-    // this.setState({ query: query, hits: [], error: null });
   };
-
-  // loadMore = () => {
-  //   this.setState({ loading: true });
-  //   this.setState(prevState => {
-  //     if (this.state.hits.length > 1) {
-  //       return { page: prevState.page };
-  //     }
-  //   });
-  //   this.fetchImages();
-  //   this.toScroll();
-  // };
 
   toScroll = () => {
-    setTimeout(() => {
-      window.scrollBy({
-        top: document.documentElement.clientHeight,
-        behavior: 'smooth',
-      });
-    }, 500);
+    window.scrollBy({
+      top: document.documentElement.clientHeight,
+      behavior: 'smooth',
+    });
   };
 
-  handleGalleryItem = fullImageUrl => {
+  handleGalleryItem = e => {
     this.setState({
-      largeImgUrl: fullImageUrl,
+      largeImgUrl: e.target.currentSrc,
       showModal: true,
     });
   };
@@ -125,7 +94,7 @@ export default class App extends Component {
         <ToastContainer autoClose={3000} />
         <ImageGallery
           images={this.state.hits}
-          onImageClick={this.handleGalleryItem}
+          onClick={this.handleGalleryItem}
         />
         {this.state.loading && (
           <Loader
@@ -139,12 +108,13 @@ export default class App extends Component {
         )}
         {this.state.hits.length > 0 && !this.state.loading && (
           <Button loadMore={this.fetchImages} />
-          // <Button loadMore={this.loadMore} />
         )}
         {this.state.showModal && (
-          <Modal onClose={this.toggleModal}>
-            <img src={this.state.largeImgUrl} alt="" />
-          </Modal>
+          <Modal
+            onClose={this.toggleModal}
+            src={this.state.largeImgUrl}
+            alt=""
+          />
         )}
       </div>
     );
