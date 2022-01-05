@@ -88,7 +88,6 @@ export default class App extends Component {
         <h1 className="Title">Image finder</h1>
         {this.state.error && <h1>{this.state.message}</h1>}
         <Searchbar onSubmit={this.getQueryFromForm} />
-        {/* {this.state.error && <h1>Something went wrong.</h1>} */}
         <ToastContainer autoClose={3000} />
         <ImageGallery
           images={this.state.hits}
