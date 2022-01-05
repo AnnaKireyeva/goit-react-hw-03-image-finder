@@ -26,6 +26,7 @@ ImageGalleryItem.propTypes = {
   imageSmall: PropTypes.string,
   imageLarge: PropTypes.string,
   alt: PropTypes.string,
+  clicked: PropTypes.func,
 };
 
 export default ImageGalleryItem;

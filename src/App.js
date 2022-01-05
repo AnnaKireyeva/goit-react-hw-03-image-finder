@@ -35,8 +35,6 @@ export default class App extends Component {
     fetch(
       `${this.baseUrl}?q=${this.state.query}&page=${this.state.page}&key=${this.apiKey}&image_type=photo&orientation=horizontal&per_page=12`,
     )
-      // .then(res => res.json())
-      // .then(console.log)
       .then(response => {
         if (response.ok) {
           return response.json();

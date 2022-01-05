@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
+import { createPortal } from 'react-dom';
 import styles from './Modal.module.css';
+import PropTypes from 'prop-types';
+
+const modalRoot = document.querySelector('#modal-root');
 
 export default class Modal extends Component {
   componentDidMount() {
@@ -12,7 +16,6 @@ export default class Modal extends Component {
 
   handleKeyDown = e => {
     if (e.code === 'Escape') {
-      console.log('clicked Escape');
       this.props.onClose();
     }
   };
@@ -24,12 +27,18 @@ export default class Modal extends Component {
   };
 
   render() {
-    return (
+    return createPortal(
       <div className={styles.Overlay} onClick={this.handleOverlayClick}>
         <div className={styles.Modal}>
           <img src={this.props.src} alt="" />
         </div>
-      </div>
+      </div>,
+      modalRoot,
     );
   }
 }
+
+Modal.propTypes = {
+  onClose: PropTypes.func,
+  src: PropTypes.string,
+};
